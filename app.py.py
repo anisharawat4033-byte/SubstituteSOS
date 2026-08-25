@@ -178,7 +178,10 @@ def style_timetable_df(df):
         if isinstance(val, str) and val.strip() == "FREE":
             return "background-color: rgba(46,204,113,0.18); color:#4ADE80; font-weight:600;"
         return ""
-    return df.style.applymap(highlight)
+    styler = df.style
+    if hasattr(styler, "map"):
+        return styler.map(highlight)
+    return styler.applymap(highlight)
 # -------------------------------------------------
 # SIDEBAR
 # -------------------------------------------------
