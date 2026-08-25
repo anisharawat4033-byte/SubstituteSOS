@@ -99,8 +99,86 @@ header[data-testid="stHeader"] {
 [data-testid="stDataFrame"] button {
     display: none !important;
 }
+
+/* ---------------------------------------------- */
+/* CARD-STYLE CONTAINERS (bordered containers)     */
+/* ---------------------------------------------- */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    background-color: #0B2545;
+    border: 1px solid #1B3A5C !important;
+    border-radius: 14px !important;
+    padding: 6px;
+}
+
+/* METRIC TILES */
+[data-testid="stMetric"] {
+    background-color: #0B2545;
+    border: 1px solid #1B3A5C;
+    border-radius: 14px;
+    padding: 16px 12px;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #9FB6D0 !important;
+}
+
+[data-testid="stMetricValue"] {
+    color: #38BDF8 !important;
+}
+
+/* ---------------------------------------------- */
+/* STATUS BADGES (used via st.markdown HTML)       */
+/* ---------------------------------------------- */
+.sos-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    margin: 4px 6px 4px 0;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+.sos-badge-green {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #4ADE80 !important;
+    border: 1px solid rgba(74, 222, 128, 0.4);
+}
+.sos-badge-red {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: #F87171 !important;
+    border: 1px solid rgba(248, 113, 113, 0.4);
+}
+.sos-badge-blue {
+    background-color: rgba(56, 189, 248, 0.15);
+    color: #38BDF8 !important;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+/* ---------------------------------------------- */
+/* FREE-PERIOD HIGHLIGHT inside styled dataframes  */
+/* (applies to cells rendered with the .free-cell  */
+/* class through pandas Styler)                    */
+/* ---------------------------------------------- */
+.free-cell {
+    background-color: rgba(46, 204, 113, 0.18) !important;
+    color: #4ADE80 !important;
+    font-weight: 600;
+}
 </style>
 """, unsafe_allow_html=True)
+
+
+def badge(text, color="blue"):
+    """Return HTML for a small colored pill badge."""
+    return f'<span class="sos-badge sos-badge-{color}">{text}</span>'
+
+
+def style_timetable_df(df):
+    """Apply green highlighting to FREE cells in a timetable dataframe."""
+    def highlight(val):
+        if isinstance(val, str) and val.strip() == "FREE":
+            return "background-color: rgba(46,204,113,0.18); color:#4ADE80; font-weight:600;"
+        return ""
+    return df.style.applymap(highlight)
 # -------------------------------------------------
 # SIDEBAR
 # -------------------------------------------------
@@ -114,6 +192,7 @@ page = st.sidebar.radio(
     [
         "🏠 Dashboard",
         "📅 Timetable",
+        "🧑‍🏫 Teacher Schedule",
         "🚨 SubstituteSOS",
         "📋 Records",
         "⚙️ Customize Schedule"
@@ -135,7 +214,7 @@ if page == "🏠 Dashboard":
 
     st.markdown("### But the school shouldn't stop.")
 
-    st.success("● SYSTEM READY")
+    st.markdown(badge("● SYSTEM READY", "green"), unsafe_allow_html=True)
 
     st.divider()
 
@@ -144,47 +223,49 @@ if page == "🏠 Dashboard":
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("📅 Dynamic Timetable")
+        with st.container(border=True):
+            st.subheader("📅 Dynamic Timetable")
 
-        st.write(
-            "Generate schedules using classes, subjects, "
-            "teacher qualifications, availability, working "
-            "days, periods and weekly requirements."
-        )
-
-        if st.button(
-            "GENERATE TIMETABLE",
-            key="generate_dashboard"
-        ):
-
-            backend.create_demo_data()
-
-            success = backend.generate_timetable(
-                verbose=False
+            st.write(
+                "Generate schedules using classes, subjects, "
+                "teacher qualifications, availability, working "
+                "days, periods and weekly requirements."
             )
 
-            if success:
-                st.success(
-                    "Timetable generated successfully!"
+            if st.button(
+                "GENERATE TIMETABLE",
+                key="generate_dashboard"
+            ):
+
+                backend.create_demo_data()
+
+                success = backend.generate_timetable(
+                    verbose=False
                 )
 
+                if success:
+                    st.success(
+                        "Timetable generated successfully!"
+                    )
+
     with col2:
-        st.subheader("🚨 SubstituteSOS")
+        with st.container(border=True):
+            st.subheader("🚨 SubstituteSOS")
 
-        st.write(
-            "Report a teacher's absence and find a qualified, "
-            "available and conflict-free substitute for the "
-            "affected class."
-        )
-
-        if st.button(
-            "REPORT ABSENCE",
-            key="absence_dashboard"
-        ):
-            st.info(
-                "Go to the SubstituteSOS page to report "
-                "an absence."
+            st.write(
+                "Report a teacher's absence and find a qualified, "
+                "available and conflict-free substitute for the "
+                "affected class."
             )
+
+            if st.button(
+                "REPORT ABSENCE",
+                key="absence_dashboard"
+            ):
+                st.info(
+                    "Go to the SubstituteSOS page to report "
+                    "an absence."
+                )
 
     st.divider()
 
@@ -193,28 +274,90 @@ if page == "🏠 Dashboard":
     step1, step2, step3 = st.columns(3)
 
     with step1:
-        st.markdown("### 01")
-        st.subheader("Build the timetable")
-        st.write(
-            "The system considers school requirements "
-            "before generating the schedule."
-        )
+        with st.container(border=True):
+            st.markdown("### 01")
+            st.subheader("Build the timetable")
+            st.write(
+                "The system considers school requirements "
+                "before generating the schedule."
+            )
 
     with step2:
-        st.markdown("### 02")
-        st.subheader("Report the change")
-        st.write(
-            "When a teacher is absent, the affected class "
-            "and period are identified."
-        )
+        with st.container(border=True):
+            st.markdown("### 02")
+            st.subheader("Report the change")
+            st.write(
+                "When a teacher is absent, the affected class "
+                "and period are identified."
+            )
 
     with step3:
-        st.markdown("### 03")
-        st.subheader("Find the right match")
-        st.write(
-            "Qualified and available teachers are checked "
-            "for timetable conflicts."
+        with st.container(border=True):
+            st.markdown("### 03")
+            st.subheader("Find the right match")
+            st.write(
+                "Qualified and available teachers are checked "
+                "for timetable conflicts."
+            )
+
+    st.divider()
+
+    # -------------------------------------------------
+    # WHO'S FREE RIGHT NOW — quick lookup widget
+    # -------------------------------------------------
+    st.header("🔎 Who's free right now?")
+
+    if not backend.data.get("timetable"):
+        st.info("Generate the timetable first to use this lookup.")
+    else:
+        col_day, col_period = st.columns(2)
+
+        with col_day:
+            free_day = st.selectbox(
+                "Day",
+                backend.DAYS,
+                key="free_lookup_day"
+            )
+
+        with col_period:
+            free_period = st.selectbox(
+                "Period",
+                list(range(1, backend.periods() + 1)),
+                key="free_lookup_period"
+            )
+
+        free_teachers = []
+        busy_teachers = []
+
+        for teacher_name in backend.data["teachers"]:
+            is_busy = False
+
+            for cls, cls_timetable in backend.data["timetable"].items():
+                entry = cls_timetable.get(free_day, {}).get(str(free_period))
+
+                if entry and entry.get("type") != "activity":
+                    active_teacher = entry.get("substitute_teacher") or entry.get("teacher")
+
+                    if active_teacher == teacher_name:
+                        is_busy = True
+                        busy_teachers.append((teacher_name, cls, entry.get("subject", "")))
+                        break
+
+            if not is_busy:
+                free_teachers.append(teacher_name)
+
+        st.markdown(
+            "".join(badge(name, "green") for name in free_teachers)
+            or "*No teachers free this period.*",
+            unsafe_allow_html=True
         )
+
+        with st.expander("Show who's busy this period"):
+            if busy_teachers:
+                for name, cls, subject in busy_teachers:
+                    st.write(f"🔴 **{name}** — {subject} in {cls}")
+            else:
+                st.write("Nobody is scheduled this period.")
 
 
 # -------------------------------------------------
@@ -766,12 +909,15 @@ elif page == "📅 Timetable":
             f"Timetable — {selected_class}"
         )
 
+        import pandas as pd
+
+        display_df = pd.DataFrame(table_data)
+
         st.dataframe(
-            table_data,
+            style_timetable_df(display_df),
             use_container_width=True,
             hide_index=True
         )
-        import pandas as pd
 
         export_df = pd.DataFrame(table_data)
 
@@ -791,6 +937,145 @@ elif page == "📅 Timetable":
         st.info(
             "Generate the timetable first."
         )
+# -------------------------------------------------
+# TEACHER SCHEDULE PAGE
+# -------------------------------------------------
+
+elif page == "🧑‍🏫 Teacher Schedule":
+
+    st.title("🧑‍🏫 Teacher Schedule")
+
+    st.write(
+        "View any teacher's personal weekly timetable — see what "
+        "they teach, in which class, and which periods they're "
+        "free."
+    )
+
+    if not backend.data.get("timetable"):
+
+        st.info(
+            "Generate the timetable first to view teacher schedules."
+        )
+
+    else:
+
+        teachers = list(backend.data["teachers"].keys())
+
+        selected_teacher = st.selectbox(
+            "Select Teacher",
+            teachers
+        )
+
+        subjects_taught = backend.data["teachers"][selected_teacher].get(
+            "subjects", []
+        )
+
+        st.markdown(
+            "**Qualified to teach:** "
+            + "".join(badge(s, "blue") for s in subjects_taught),
+            unsafe_allow_html=True
+        )
+
+        table_data = []
+        free_count = 0
+        class_count = 0
+
+        for day in backend.DAYS:
+
+            row = {"Day": day}
+
+            for p in range(1, backend.periods() + 1):
+
+                found = None
+
+                for cls, cls_timetable in backend.data["timetable"].items():
+
+                    entry = cls_timetable.get(day, {}).get(str(p))
+
+                    if not entry or entry.get("type") == "activity":
+                        continue
+
+                    active_teacher = (
+                        entry.get("substitute_teacher")
+                        or entry.get("teacher")
+                    )
+
+                    if active_teacher == selected_teacher:
+                        found = (cls, entry)
+                        break
+
+                if not found:
+                    row[f"P{p}"] = "FREE"
+                    free_count += 1
+                else:
+                    cls, entry = found
+                    subject = entry.get("subject", "")
+                    is_sub = entry.get("substitute_teacher") == selected_teacher
+
+                    row[f"P{p}"] = (
+                        f"{subject} | {cls}" + (" (SUB)" if is_sub else "")
+                    )
+                    class_count += 1
+
+            table_data.append(row)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.metric("📚 Classes this week", class_count)
+
+        with col2:
+            st.metric("🟢 Free periods this week", free_count)
+
+        st.divider()
+
+        st.subheader(f"Weekly Schedule — {selected_teacher}")
+
+        import pandas as pd
+
+        schedule_df = pd.DataFrame(table_data)
+
+        st.dataframe(
+            style_timetable_df(schedule_df),
+            use_container_width=True,
+            hide_index=True
+        )
+
+        st.divider()
+
+        st.subheader("Find a free period")
+
+        lookup_day = st.selectbox(
+            "Day",
+            backend.DAYS,
+            key="teacher_lookup_day"
+        )
+
+        lookup_period = st.selectbox(
+            "Period",
+            list(range(1, backend.periods() + 1)),
+            key="teacher_lookup_period"
+        )
+
+        day_row = next(
+            (r for r in table_data if r["Day"] == lookup_day), None
+        )
+
+        if day_row:
+            status = day_row.get(f"P{lookup_period}", "FREE")
+
+            if status == "FREE":
+                st.markdown(
+                    badge(f"✓ {selected_teacher} is FREE at {lookup_day} P{lookup_period}", "green"),
+                    unsafe_allow_html=True
+                )
+            else:
+                st.markdown(
+                    badge(f"✗ Busy: {status}", "red"),
+                    unsafe_allow_html=True
+                )
+
+
 # -------------------------------------------------
 # SUBSTITUTE SOS PAGE
 # -------------------------------------------------
@@ -923,10 +1208,11 @@ elif page == "🚨 SubstituteSOS":
                 f"{result['recommended']}"
             )
 
-            st.write(
-                "✓ Qualified\n\n"
-                "✓ Available\n\n"
-                "✓ Conflict-Free"
+            st.markdown(
+                badge("✓ Qualified", "green")
+                + badge("✓ Available", "green")
+                + badge("✓ Conflict-Free", "green"),
+                unsafe_allow_html=True
             )
 
             if st.button(
