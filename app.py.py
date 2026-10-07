@@ -807,12 +807,15 @@ elif page == "⚙️ Customize Schedule":
                 "weekly requirements have been applied."
             )
 
-        else:
+                else:
 
             st.error(
-                "The timetable could not be generated. "
-                "Check your class requirements, subjects "
-                "and teacher qualifications."
+                "The timetable could not be generated."
+            )
+
+            st.warning(
+                "Please check your class requirements, "
+                "subjects and teacher qualifications."
             )
 elif page == "📅 Timetable":
 
