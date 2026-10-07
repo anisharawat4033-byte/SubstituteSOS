@@ -807,7 +807,7 @@ elif page == "⚙️ Customize Schedule":
                 "weekly requirements have been applied."
             )
 
-                else:
+        else:
 
             st.error(
                 "The timetable could not be generated."
