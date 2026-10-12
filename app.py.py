@@ -809,13 +809,10 @@ elif page == "⚙️ Customize Schedule":
                 "Please use the Timetable page to retry."
             )
     elif page == "📅 Timetable":
-
-
-    st.title("📅 Dynamic Timetable")
-
-    st.write(
-        "Generate and view the school timetable."
-    )
+        st.title("📅 Dynamic Timetable")
+        st.write(
+            "Generate and view the school timetable."
+        )
 
     if st.button("Generate Demo Timetable"):
 
