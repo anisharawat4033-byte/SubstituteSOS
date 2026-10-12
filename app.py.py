@@ -786,33 +786,27 @@ elif page == "⚙️ Customize Schedule":
         "generate a new timetable."
     )
 
-    if st.button(
+        if st.button(
         "🚀 GENERATE UPDATED TIMETABLE",
         type="primary",
         use_container_width=True,
         key="generate_custom_timetable"
     ):
+        backend.create_demo_data()
 
         success = backend.generate_timetable(
-            verbose=False
+            verbose=True
         )
 
         if success:
             backend.save_data()
-            st.success(
-                "✅ Updated timetable generated successfully!"
-            )
-            st.info(
-                "Your new classes, subjects, teachers and "
-                "weekly requirements have been applied."
-            )
-
+            st.success("✅ Timetable generated successfully!")
+            st.rerun()
         else:
-
             st.error(
-                "The timetable could not be generated."
+                "Demo timetable generation failed. "
+                "Please use the Timetable page to retry."
             )
-
             st.warning(
                 "Please check your class requirements, "
                 "subjects and teacher qualifications."
