@@ -779,6 +779,7 @@ elif page == "⚙️ Customize Schedule":
     # REGENERATE TIMETABLE
     # =================================================
 
+    
     st.header("🔄 Apply Changes")
 
     st.write(
@@ -786,7 +787,7 @@ elif page == "⚙️ Customize Schedule":
         "generate a new timetable."
     )
 
-        if st.button(
+    if st.button(
         "🚀 GENERATE UPDATED TIMETABLE",
         type="primary",
         use_container_width=True,
@@ -807,11 +808,10 @@ elif page == "⚙️ Customize Schedule":
                 "Demo timetable generation failed. "
                 "Please use the Timetable page to retry."
             )
-            st.warning(
-                "Please check your class requirements, "
-                "subjects and teacher qualifications."
-            )
         elif page == "📅 Timetable":
+
+    st.title("📅 Dynamic Timetable")
+
 
     st.title("📅 Dynamic Timetable")
 
