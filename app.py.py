@@ -811,7 +811,7 @@ elif page == "⚙️ Customize Schedule":
                 "Please check your class requirements, "
                 "subjects and teacher qualifications."
             )
-elif page == "📅 Timetable":
+        elif page == "📅 Timetable":
 
     st.title("📅 Dynamic Timetable")
 
