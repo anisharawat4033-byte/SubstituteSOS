@@ -808,9 +808,7 @@ elif page == "⚙️ Customize Schedule":
                 "Demo timetable generation failed. "
                 "Please use the Timetable page to retry."
             )
-        elif page == "📅 Timetable":
-
-    st.title("📅 Dynamic Timetable")
+    elif page == "📅 Timetable":
 
 
     st.title("📅 Dynamic Timetable")
