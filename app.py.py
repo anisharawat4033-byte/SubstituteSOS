@@ -808,11 +808,12 @@ elif page == "⚙️ Customize Schedule":
                 "Demo timetable generation failed. "
                 "Please use the Timetable page to retry."
             )
-    elif page == "📅 Timetable":
-        st.title("📅 Dynamic Timetable")
-        st.write(
-            "Generate and view the school timetable."
-        )
+         elif page == "📅 Timetable":
+             
+    st.title("📅 Dynamic Timetable")
+    st.write(
+    "Generate and view the school timetable."
+    )
 
     if st.button("Generate Demo Timetable"):
 
